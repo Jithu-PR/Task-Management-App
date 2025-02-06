@@ -280,32 +280,17 @@ export default function TodoList() {
           </div>
           <div className="flex flex-col">
             {allTodos && allTodos.length > 0 ? (
-              isScreen === false ? (
-                allTodos
-                  .filter((todo) => !todo.completed)
-                  .map((todoItem) => (
-                    <TodoItem
-                      key={todoItem._id}
-                      todoItem={todoItem}
-                      onCompleteTodo={handleCompleteTodo}
-                      onEditTodo={handleEditTodo}
-                      onDeleteTodo={handleDeleteTodo}
-                      isCompleted={false}
-                    />
-                  ))
-              ) : (
-                allTodos
-                  .filter((todo) => todo.completed)
-                  .map((todoItem) => (
-                    <TodoItem
-                      key={todoItem._id}
-                      todoItem={todoItem}
-                      onCompleteTodo={handleCompleteTodo}
-                      onEditTodo={handleEditTodo}
-                      onDeleteTodo={handleDeleteTodo}
-                    />
-                  ))
-              )
+              allTodos
+                .filter((todo) => (isScreen ? todo.completed : !todo.completed))
+                .map((todoItem) => (
+                  <TodoItem
+                    key={todoItem._id}
+                    todoItem={todoItem}
+                    onCompleteTodo={handleCompleteTodo}
+                    onEditTodo={handleEditTodo}
+                    onDeleteTodo={handleDeleteTodo}
+                  />
+                ))
             ) : (
               <p>No todos available</p>
             )}
