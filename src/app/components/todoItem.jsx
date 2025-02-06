@@ -17,7 +17,11 @@ const TodoItem = ({ todoItem, onCompleteTodo, onEditTodo, onDeleteTodo }) => {
           {todoItem.description}
         </p>
         <p className="text-[14px] text-[#838383] mt-2">
-          Complete by: {todoItem.deadline.substring(0, 10)}
+        {todoItem.completed ? (
+    <>Completed on: {todoItem.deadline.substring(0, 10)}</>
+  ) : (
+    <>Complete by: {todoItem.deadline.substring(0, 10)}</>
+  )}
         </p>
       </div>
       <div className="flex items-center space-x-3">

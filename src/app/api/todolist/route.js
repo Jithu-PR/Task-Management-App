@@ -20,7 +20,7 @@ export async function POST(request) {
   }
 }
 
-export async function GET(request) {
+export async function GET() {
   try {
     const todos = await Todo.find();
     console.log(todos, 'todos');
@@ -44,12 +44,7 @@ export async function PUT(request) {
   try {
     const updatedTodo = await Todo.findOneAndUpdate(
       { _id: id },
-      {
-        title: data.title,
-        description: data.description,
-        deadline: data.deadline,
-        completed: data.completed,
-      },
+      data,
       { new: true }
     );
     if (data.completed) {

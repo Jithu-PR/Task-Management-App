@@ -11,13 +11,14 @@ const initialState = {
 };
 
 export default function TodoList() {
-  const [isScreen, setIsScreen] = useState(false);
+  const [isCompletedTab, setIsCompletedTab] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [allTodos, setAllTodos] = useState([]);
   const [todo, setTodo] = useState(initialState);
   const [todoItem, setTodoItem] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const { toast } = useToast();
+  const completionDate = new Date().toISOString().substring(0, 10);
 
   const handleAddTodos = async (e) => {
     e.preventDefault();
@@ -36,11 +37,6 @@ export default function TodoList() {
         setTodo(initialState);
         toast({
           title: response.data.message || 'Todo added successfully',
-        });
-      } else {
-        toast({
-          title: response.data.message || 'Something went wrong',
-          variant: 'destructive',
         });
       }
     } catch (e) {
@@ -104,11 +100,6 @@ export default function TodoList() {
         toast({
           title: response.data.message || 'Todo edited successfully',
         });
-      } else {
-        toast({
-          title: response.data.message || 'Something went wrong',
-          variant: 'destructive',
-        });
       }
       setIsEdit(false);
       setTodoItem({});
@@ -127,22 +118,19 @@ export default function TodoList() {
   const handleCompleteTodo = async (currentTodoId) => {
     try {
       setIsLoading(true);
+      console.log(completionDate);
+      
       const response = await axios.put(`/api/todolist?id=${currentTodoId}`, {
-        completed: true,
+        deadline: completionDate, completed: true,
       });
       if (response.status === 200) {
         setAllTodos((prevTodos) =>
           prevTodos.map((todo) =>
-            todo._id === currentTodoId ? { ...todo, completed: true } : todo
+            todo._id === currentTodoId ? { ...todo,deadline: completionDate, completed: true } : todo
           )
         );
         toast({
           title: response.data.message || 'Todo marked as completed',
-        });
-      } else {
-        toast({
-          title: response.data.message || 'Something went wrong',
-          variant: 'destructive',
         });
       }
     } catch (e) {
@@ -163,11 +151,6 @@ export default function TodoList() {
       if (response.status === 200) {
         toast({
           title: response.data.message || 'Todo deleted',
-        });
-      } else {
-        toast({
-          title: response.data.message || 'Something went wrong',
-          variant: 'destructive',
         });
       }
       setAllTodos((prevTodos) =>
@@ -190,7 +173,7 @@ export default function TodoList() {
 
   return (
     <div
-      className={`bg-[#1f1e1e] text-white overflow-hidden min-h-screen transition-opacity duration-300 ${isLoading ? 'opacity-50' : 'opacity-100'}`}
+      className={`bg-[#1f1e1e] text-white overflow-hidden min-h-screen transition-opacity duration-300 ${isLoading ? 'opacity-50 pointer-events: none' : 'opacity-100'}`}
     >
       <h1 className="text-center text-4xl mt-5">To-Do List</h1>
       <div className="bg-[#1f1e1e] p-[2%] mx-auto mt-[3%] max-h-[80%] overflow-y-auto shadow-[0px_5px_7px_black]">
@@ -262,17 +245,17 @@ export default function TodoList() {
         <div className="mb-3.5">
           <div>
             <button
-              className={`text-white border-none rounded-none mt-6 p-2 cursor-pointer ${!isScreen ? 'bg-[#00e67a]' : 'bg-[#494949]'} w-15`}
+              className={`text-white border-none rounded-none mt-6 p-2 cursor-pointer ${!isCompletedTab ? 'bg-[#00e67a]' : 'bg-[#494949]'} w-15`}
               onClick={() => {
-                setIsScreen(false);
+                setIsCompletedTab(false);
               }}
             >
               ToDo
             </button>
             <button
-              className={`text-white border-none rounded-none mt-6 p-2 cursor-pointer ${isScreen ? 'bg-[#00e67a]' : 'bg-[#494949]'} w-auto`}
+              className={`text-white border-none rounded-none mt-6 p-2 cursor-pointer ${isCompletedTab ? 'bg-[#00e67a]' : 'bg-[#494949]'} w-auto`}
               onClick={() => {
-                setIsScreen(true);
+                setIsCompletedTab(true);
               }}
             >
               Complete
@@ -281,7 +264,8 @@ export default function TodoList() {
           <div className="flex flex-col">
             {allTodos && allTodos.length > 0 ? (
               allTodos
-                .filter((todo) => (isScreen ? todo.completed : !todo.completed))
+                .filter((todo) => (isCompletedTab ? todo.completed : !todo.completed))
+                .reverse()
                 .map((todoItem) => (
                   <TodoItem
                     key={todoItem._id}
