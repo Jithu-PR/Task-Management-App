@@ -13,8 +13,8 @@ This is a simple **Todo List** application built with **React**, **Next.js**, an
 - **Complete Todo**: Users can mark todos as completed, which moves them to a separate list.
 - **Delete Todo**: Users can delete todos from the list.
 - **Dynamic Views**: The application displays all todos in different screens:
-  - **Incomplete Todos**: Displayed when `isScreen` is `false`.
-  - **Completed Todos**: Displayed when `isScreen` is `true`.
+  - **Incomplete Todos**: Displayed when `isCompletedTab` is `false`.
+  - **Completed Todos**: Displayed when `isCompletedTab` is `true`.
 - **Toast Notifications**: Toasts are shown on successful actions (add, edit, delete) or if something goes wrong.
 
 ---
