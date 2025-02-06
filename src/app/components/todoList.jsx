@@ -118,15 +118,16 @@ export default function TodoList() {
   const handleCompleteTodo = async (currentTodoId) => {
     try {
       setIsLoading(true);
-      console.log(completionDate);
-      
       const response = await axios.put(`/api/todolist?id=${currentTodoId}`, {
-        deadline: completionDate, completed: true,
+        deadline: completionDate,
+        completed: true,
       });
       if (response.status === 200) {
         setAllTodos((prevTodos) =>
           prevTodos.map((todo) =>
-            todo._id === currentTodoId ? { ...todo,deadline: completionDate, completed: true } : todo
+            todo._id === currentTodoId
+              ? { ...todo, deadline: completionDate, completed: true }
+              : todo
           )
         );
         toast({
@@ -156,8 +157,8 @@ export default function TodoList() {
       setAllTodos((prevTodos) =>
         prevTodos.filter((todo) => todo._id !== currentTodoId)
       );
-    } catch (error) {
-      console.log('Error deleting todo:', error);
+    } catch (e) {
+      console.log(e);
       toast({
         title: 'Something went wrong',
         variant: 'destructive',
@@ -264,7 +265,9 @@ export default function TodoList() {
           <div className="flex flex-col">
             {allTodos && allTodos.length > 0 ? (
               allTodos
-                .filter((todo) => (isCompletedTab ? todo.completed : !todo.completed))
+                .filter((todo) =>
+                  isCompletedTab ? todo.completed : !todo.completed
+                )
                 .reverse()
                 .map((todoItem) => (
                   <TodoItem
@@ -276,7 +279,7 @@ export default function TodoList() {
                   />
                 ))
             ) : (
-              <p>No todos available</p>
+              <p className="mt-5 text-2xl">No todos available</p>
             )}
           </div>
         </div>

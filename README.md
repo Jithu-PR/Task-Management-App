@@ -21,14 +21,13 @@ This is a simple **Todo List** application built with **React**, **Next.js**, an
 
 ## Tech Stack
 
-- **Frontend**: 
+- **Frontend**:
   - React (with functional components and hooks)
   - Next.js (for server-side functionality)
   - TailwindCSS (for styling)
   - Axios (for API calls)
   - Shadcn (for UI components like Toaster)
-  
-- **Backend**: 
+- **Backend**:
   - Node.js (with Next.js API routes)
   - MongoDB (for storing todos)
 
@@ -57,9 +56,10 @@ npm install
 ```
 
 3. **Set up your MongoDB**:
+
    - If you're using **MongoDB Atlas**, create a cluster and get your connection string.
    - Add your MongoDB URI in the `.env` file:
-   
+
    ```
    MONGODB_URI=your_mongodb_connection_string
    ```
@@ -87,12 +87,11 @@ npm run dev
     "deadline": "2025-12-31T12:00:00Z"
   }
   ```
-  
 - **Response**:
   ```json
   {
     "message": "Todo added successfully",
-    "newTodo": { 
+    "newTodo": {
       "_id": "todo_id",
       "title": "Todo title",
       "description": "Todo description",
@@ -107,8 +106,8 @@ npm run dev
 - **Purpose**: Updates a todo or marks it as completed.
 - **Query Params**:
   - `id`: The ID of the todo to update.
-  
 - **Body** (for editing or marking as complete):
+
   ```json
   {
     "title": "Updated title",
@@ -136,6 +135,7 @@ npm run dev
 
 - **Purpose**: Deletes a todo.
 - **Query Params**:
+
   - `id`: The ID of the todo to delete.
 
 - **Response**:
@@ -166,6 +166,7 @@ The application uses React's `useState` and `useEffect` hooks for managing state
 ## To Do List Screens
 
 There are two main screens based on the `isScreen` state:
+
 1. **Incomplete Todos**: Todos that are not marked as completed.
 2. **Completed Todos**: Todos that are marked as completed.
 
@@ -174,6 +175,7 @@ There are two main screens based on the `isScreen` state:
 ## Toast Notifications
 
 Toast notifications are shown for:
+
 - **Success**: After a todo is added, updated, or deleted.
 - **Error**: If a user attempts to submit incomplete or invalid data.
 

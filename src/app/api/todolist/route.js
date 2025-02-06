@@ -42,11 +42,9 @@ export async function PUT(request) {
   const data = await request.json();
   console.log(data);
   try {
-    const updatedTodo = await Todo.findOneAndUpdate(
-      { _id: id },
-      data,
-      { new: true }
-    );
+    const updatedTodo = await Todo.findOneAndUpdate({ _id: id }, data, {
+      new: true,
+    });
     if (data.completed) {
       return NextResponse.json(
         { message: 'Todo marked as completed', updatedTodo },
