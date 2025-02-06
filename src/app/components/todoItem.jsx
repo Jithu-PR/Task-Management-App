@@ -3,14 +3,7 @@ import React from 'react';
 import { FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineDelete } from 'react-icons/ai';
 
-const TodoItem = ({
-  todoItem,
-  handleCompleteTodo,
-  handleEditTodo,
-  handleDeleteTodo,
-  handleDeleteCompletedTodo,
-  isCompleted,
-}) => {
+const TodoItem = ({ todoItem, onCompleteTodo, onEditTodo, onDeleteTodo }) => {
   return (
     <div
       key={todoItem._id}
@@ -28,19 +21,19 @@ const TodoItem = ({
         </p>
       </div>
       <div className="flex items-center space-x-3">
-        {!isCompleted && (
+        {!todoItem.completed && (
           <>
             <FiCheck
               className="text-[25px] mr-2.5 cursor-pointer text-[#00e67a] hover:text-[#04c46a]"
               onClick={() => {
-                handleCompleteTodo(todoItem._id);
+                onCompleteTodo(todoItem._id);
               }}
               title="Complete?"
             />
             <FiClipboard
               className="text-[25px] mr-2.5 cursor-pointer text-white hover:text-blue-500"
               onClick={() => {
-                handleEditTodo(todoItem);
+                onEditTodo(todoItem);
               }}
               title="Edit?"
             />
@@ -49,9 +42,7 @@ const TodoItem = ({
         <AiOutlineDelete
           className="text-4xl cursor-pointer hover:text-red-500"
           onClick={() => {
-            isCompleted
-              ? handleDeleteTodo(todoItem._id)
-              : handleDeleteTodo(todoItem._id);
+            onDeleteTodo(todoItem._id);
           }}
           title="Delete?"
         />

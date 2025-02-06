@@ -14,20 +14,26 @@ export default function TodoList() {
   const [isScreen, setIsScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [allTodos, setAllTodos] = useState([]);
+  const [todo, setTodo] = useState(initialState);
   const [todoItem, setTodoItem] = useState({});
   const [isEdit, setIsEdit] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
-  const [newDescription, setNewDescription] = useState('');
-  const [newDate, setNewDate] = useState('');
   const { toast } = useToast();
-  const [todo, setTodo] = useState(initialState);
 
   const handleAddTodos = async (e) => {
     e.preventDefault();
+    if (!todo.title || !todo.description || !todo.deadline) {
+      toast({
+        title: 'All fields are required',
+        variant: 'destructive',
+      });
+      return;
+    }
     try {
       setIsLoading(true);
       const response = await axios.post('/api/todolist', todo);
       if (response.status === 201) {
+        setAllTodos((prevTodos) => [...prevTodos, response.data.newTodo]);
+        setTodo(initialState);
         toast({
           title: response.data.message || 'Todo added successfully',
         });
@@ -37,8 +43,6 @@ export default function TodoList() {
           variant: 'destructive',
         });
       }
-      setTodo(initialState);
-      getAllTodo();
     } catch (e) {
       console.log(e);
       toast({
@@ -72,6 +76,7 @@ export default function TodoList() {
         description: currentTodoitem.description,
         deadline: currentTodoitem.deadline,
       }));
+      setTodoItem(currentTodoitem);
     } catch (e) {
       console.log(e);
     } finally {
@@ -83,15 +88,19 @@ export default function TodoList() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      setNewTitle(newTitle);
-      setNewDescription(newDescription);
-      setNewDate(newDate);
       const response = await axios.put(
         `/api/todolist?id=${todoItem._id}`,
         todo,
         { completed: false }
       );
       if (response.status === 200) {
+        setAllTodos((prevTodos) => {
+          return prevTodos.map((todo) =>
+            todo._id === todoItem._id
+              ? { ...todo, ...response.data.updatedTodo }
+              : todo
+          );
+        });
         toast({
           title: response.data.message || 'Todo edited successfully',
         });
@@ -104,7 +113,6 @@ export default function TodoList() {
       setIsEdit(false);
       setTodoItem({});
       setTodo(initialState);
-      getAllTodo();
     } catch (e) {
       console.log(e);
       toast({
@@ -123,6 +131,11 @@ export default function TodoList() {
         completed: true,
       });
       if (response.status === 200) {
+        setAllTodos((prevTodos) =>
+          prevTodos.map((todo) =>
+            todo._id === currentTodoId ? { ...todo, completed: true } : todo
+          )
+        );
         toast({
           title: response.data.message || 'Todo marked as completed',
         });
@@ -157,7 +170,9 @@ export default function TodoList() {
           variant: 'destructive',
         });
       }
-      getAllTodo();
+      setAllTodos((prevTodos) =>
+        prevTodos.filter((todo) => todo._id !== currentTodoId)
+      );
     } catch (error) {
       console.log('Error deleting todo:', error);
       toast({
@@ -174,8 +189,10 @@ export default function TodoList() {
   }, []);
 
   return (
-    <div className="bg-[#1f1e1e] text-white overflow-hidden min-h-screen">
-      <h1 className="text-center">To-Do List</h1>
+    <div
+      className={`bg-[#1f1e1e] text-white overflow-hidden min-h-screen transition-opacity duration-300 ${isLoading ? 'opacity-50' : 'opacity-100'}`}
+    >
+      <h1 className="text-center text-4xl mt-5">To-Do List</h1>
       <div className="bg-[#1f1e1e] p-[2%] mx-auto mt-[3%] max-h-[80%] overflow-y-auto shadow-[0px_5px_7px_black]">
         <div className="flex items-center justify-center border-t border-b border-gray-400 py-6 mb-6">
           <div className="flex flex-col items-start ml-6 mr-6">
@@ -270,9 +287,9 @@ export default function TodoList() {
                     <TodoItem
                       key={todoItem._id}
                       todoItem={todoItem}
-                      handleCompleteTodo={handleCompleteTodo}
-                      handleEditTodo={handleEditTodo}
-                      handleDeleteTodo={handleDeleteTodo}
+                      onCompleteTodo={handleCompleteTodo}
+                      onEditTodo={handleEditTodo}
+                      onDeleteTodo={handleDeleteTodo}
                       isCompleted={false}
                     />
                   ))
@@ -283,10 +300,9 @@ export default function TodoList() {
                     <TodoItem
                       key={todoItem._id}
                       todoItem={todoItem}
-                      handleCompleteTodo={handleCompleteTodo}
-                      handleEditTodo={handleEditTodo}
-                      handleDeleteTodo={handleDeleteTodo}
-                      isCompleted={true}
+                      onCompleteTodo={handleCompleteTodo}
+                      onEditTodo={handleEditTodo}
+                      onDeleteTodo={handleDeleteTodo}
                     />
                   ))
               )

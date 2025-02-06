@@ -7,10 +7,7 @@ await connectionToDatabase();
 export async function POST(request) {
   try {
     const { title, description, deadline } = await request.json();
-    console.log(request);
-
     const newTodo = new Todo({ title, description, deadline });
-    console.log(newTodo, 'new');
 
     await newTodo.save();
     return NextResponse.json(
