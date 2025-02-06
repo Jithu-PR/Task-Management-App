@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineDelete } from 'react-icons/ai';
@@ -13,11 +14,11 @@ const TodoItem = ({ todoItem, handleCompleteTodo, handleEditTodo, handleDeleteTo
       <div className="flex items-center space-x-3">
         {!isCompleted && (
           <>
-            <FiCheck className='text-[25px] mr-2.5 cursor-pointer text-[#00e67a] hover:text-[#04c46a]' onClick={() => { handleCompleteTodo(todoItem) }} title="Complete?" />
+            <FiCheck className='text-[25px] mr-2.5 cursor-pointer text-[#00e67a] hover:text-[#04c46a]' onClick={() => { handleCompleteTodo(todoItem._id) }} title="Complete?" />
             <FiClipboard className='text-[25px] mr-2.5 cursor-pointer text-white hover:text-blue-500' onClick={() => { handleEditTodo(todoItem) }} title="Edit?" />
           </>
         )}
-        <AiOutlineDelete className='text-4xl cursor-pointer hover:text-red-500' onClick={() => { isCompleted ? handleDeleteCompletedTodo(todoItem._id) : handleDeleteTodo(todoItem._id) }} title="Delete?" />
+        <AiOutlineDelete className='text-4xl cursor-pointer hover:text-red-500' onClick={() => { isCompleted ? handleDeleteTodo(todoItem._id) : handleDeleteTodo(todoItem._id) }} title="Delete?" />
       </div>
     </div>
   );

@@ -2,14 +2,17 @@ import connectionToDatabase from "../../../../lib/mongoose";
 import Todo from "../../../../models/todo";
 import { NextResponse } from "next/server";
 
+await connectionToDatabase();
+
 export async function POST(request) {
     try{
-        
-        await connectionToDatabase();
+    
         const {title, description, deadline} = await request.json();
         const newTodo = new Todo({title, description, deadline});
+        console.log(newTodo,"new");
+        
         await newTodo.save();
-        return NextResponse.json(newTodo, {status: 201})
+        return NextResponse.json({message: "Task added successfully",newTodo}, {status: 201})
     }catch(e) {
         console.log(e);
         return NextResponse.json({ message: "Error adding todo" }, { status: 500 });
@@ -18,8 +21,7 @@ export async function POST(request) {
 
 export async function GET(request) {
     try{
-        
-        await connectionToDatabase();
+    
         const todos = await Todo.find();
         console.log(todos,"todos");
         
@@ -30,12 +32,9 @@ export async function GET(request) {
     }
 }
 
-export async function PUT(request, { params }) {
+/*export async function PUT(request, { params }) {
     try {
         console.log("PUT request received");
-
-        await connectionToDatabase();
-
         const url = new URL(request.url);
         const id = url.searchParams.get('id');
         const { title, description, deadline } = await request.json();
@@ -56,22 +55,47 @@ export async function PUT(request, { params }) {
             return NextResponse.json({ message: "Todo not found" }, { status: 404 });
         }
 
-        return NextResponse.json(updatedTodo, { status: 200 });
+        return NextResponse.json({message: "Todo updated", updatedTodo}, { status: 200 });
 
     } catch (e) {
         console.log("Error editing todo", e);
         return NextResponse.json({ message: "Error editing todo" }, { status: 500 });
     }
-}
+}*/
 
+export async function PUT(request) {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+    const action = url.pathname.split('/')[3];
+  
+    const { title, description, deadline, completed, isEdit } = await request.json();
+    console.log(isEdit);
+    
+  
+    if (isEdit) {
+      const updatedTodo = await Todo.findOneAndUpdate(
+        { _id: id },
+        { title, description, deadline },
+        { new: true }
+      );
+      return NextResponse.json({ message: "Todo updated", updatedTodo }, { status: 200 });
+    }
+  
+    if (!isEdit) {
+      const updatedTodo = await Todo.findOneAndUpdate(
+        { _id: id },
+        { completed: true },
+        { new: true }
+      );
+      return NextResponse.json({ message: "Todo marked as completed", updatedTodo }, { status: 200 });
+    }
+  
+    return NextResponse.json({ message: "Invalid action" }, { status: 400 });
+  }
+  
 
 export async function DELETE(request) {
-    console.log("delete async");
-    
     try {
-        console.log("delete try block");
-
-        await connectionToDatabase();
         
         const url = new URL(request.url);
         const currentTodoId = url.searchParams.get('id');
