@@ -5,9 +5,12 @@ import { useToast } from '@/hooks/use-toast';
 import TodoItem from './todoItem';
 
 const initialState = {
+  _id: '',
   title: '',
   description: '',
   deadline: '',
+  completed: false,
+  completionDate: '',
 };
 
 export default function TodoList() {
@@ -15,19 +18,17 @@ export default function TodoList() {
   const [isLoading, setIsLoading] = useState(false);
   const [allTodos, setAllTodos] = useState([]);
   const [todo, setTodo] = useState(initialState);
-  const [todoItem, setTodoItem] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const { toast } = useToast();
-  const completionDate = new Date().toISOString().substring(0, 10);
+  const currentDate = new Date().toISOString();
 
   const handleAddTodos = async (e) => {
     e.preventDefault();
     if (!todo.title || !todo.description || !todo.deadline) {
-      toast({
+      return toast({
         title: 'All fields are required',
         variant: 'destructive',
       });
-      return;
     }
     try {
       setIsLoading(true);
@@ -66,13 +67,8 @@ export default function TodoList() {
     try {
       setIsLoading(true);
       setIsEdit(true);
-      setTodo((prevState) => ({
-        ...prevState,
-        title: currentTodoitem.title,
-        description: currentTodoitem.description,
-        deadline: currentTodoitem.deadline,
-      }));
-      setTodoItem(currentTodoitem);
+      setTodo(currentTodoitem);
+      console.log(currentTodoitem, 'todo');
     } catch (e) {
       console.log(e);
     } finally {
@@ -80,53 +76,23 @@ export default function TodoList() {
     }
   };
 
-  const handleUpdateTodo = async (e) => {
-    e.preventDefault();
+  const handleUpdateOrCompleteTodo = async (currentTodoItem, completedFlag) => {
+    console.log(todo, 'todo', completedFlag, 'flag');
+    const updatedTodo = completedFlag
+      ? { ...currentTodoItem, completed: true, completionDate: currentDate }
+      : todo;
+    console.log(updatedTodo, 'update');
     try {
       setIsLoading(true);
       const response = await axios.put(
-        `/api/todolist?id=${todoItem._id}`,
-        todo,
-        { completed: false }
+        `/api/todolist?id=${currentTodoItem._id}`,
+        updatedTodo
       );
-      if (response.status === 200) {
-        setAllTodos((prevTodos) => {
-          return prevTodos.map((todo) =>
-            todo._id === todoItem._id
-              ? { ...todo, ...response.data.updatedTodo }
-              : todo
-          );
-        });
-        toast({
-          title: response.data.message || 'Todo edited successfully',
-        });
-      }
-      setIsEdit(false);
-      setTodoItem({});
-      setTodo(initialState);
-    } catch (e) {
-      console.log(e);
-      toast({
-        title: 'Something went wrong',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCompleteTodo = async (currentTodoId) => {
-    try {
-      setIsLoading(true);
-      const response = await axios.put(`/api/todolist?id=${currentTodoId}`, {
-        deadline: completionDate,
-        completed: true,
-      });
       if (response.status === 200) {
         setAllTodos((prevTodos) =>
           prevTodos.map((todo) =>
-            todo._id === currentTodoId
-              ? { ...todo, deadline: completionDate, completed: true }
+            todo._id === currentTodoItem._id
+              ? { ...todo, ...updatedTodo }
               : todo
           )
         );
@@ -228,7 +194,7 @@ export default function TodoList() {
               <button
                 type="button"
                 className="bg-[#00e67a] text-white border-none rounded-none mt-6 p-2.5 w-15 cursor-pointer hover:bg-[#00a34e]"
-                onClick={handleAddTodos}
+                onClick={(e) => handleAddTodos(e)}
               >
                 Add
               </button>
@@ -236,7 +202,9 @@ export default function TodoList() {
               <button
                 type="button"
                 className="bg-[#00e67a] text-white border-none rounded-none mt-6 p-2.5 w-15 cursor-pointer hover:bg-[#00a34e]"
-                onClick={handleUpdateTodo}
+                onClick={() => {
+                  handleUpdateOrCompleteTodo(todo, false);
+                }}
               >
                 Edit
               </button>
@@ -273,7 +241,7 @@ export default function TodoList() {
                   <TodoItem
                     key={todoItem._id}
                     todoItem={todoItem}
-                    onCompleteTodo={handleCompleteTodo}
+                    onUpdateOrCompleteTodo={handleUpdateOrCompleteTodo}
                     onEditTodo={handleEditTodo}
                     onDeleteTodo={handleDeleteTodo}
                   />

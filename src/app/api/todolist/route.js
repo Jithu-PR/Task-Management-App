@@ -23,8 +23,6 @@ export async function POST(request) {
 export async function GET() {
   try {
     const todos = await Todo.find();
-    console.log(todos, 'todos');
-
     return NextResponse.json(todos, { status: 200 });
   } catch (e) {
     console.log(e);
@@ -40,11 +38,11 @@ export async function PUT(request) {
   const id = url.searchParams.get('id');
 
   const data = await request.json();
-  console.log(data);
   try {
     const updatedTodo = await Todo.findOneAndUpdate({ _id: id }, data, {
       new: true,
     });
+
     if (data.completed) {
       return NextResponse.json(
         { message: 'Todo marked as completed', updatedTodo },

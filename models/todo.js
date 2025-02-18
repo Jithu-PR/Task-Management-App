@@ -17,6 +17,10 @@ const TodoSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  completionDate: {
+    type: Date,
+    default: null,
+  },
 });
 
 const Todo = mongoose.models.Todo || mongoose.model('Todo', TodoSchema);

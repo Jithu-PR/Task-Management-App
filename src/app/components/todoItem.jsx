@@ -3,7 +3,12 @@ import React from 'react';
 import { FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineDelete } from 'react-icons/ai';
 
-const TodoItem = ({ todoItem, onCompleteTodo, onEditTodo, onDeleteTodo }) => {
+const TodoItem = ({
+  todoItem,
+  onUpdateOrCompleteTodo,
+  onEditTodo,
+  onDeleteTodo,
+}) => {
   return (
     <div
       key={todoItem._id}
@@ -18,7 +23,7 @@ const TodoItem = ({ todoItem, onCompleteTodo, onEditTodo, onDeleteTodo }) => {
         </p>
         <p className="text-[14px] text-[#838383] mt-2">
           {todoItem.completed ? (
-            <>Completed on: {todoItem.deadline.substring(0, 10)}</>
+            <>Completed on: {todoItem.completionDate.substring(0, 10)}</>
           ) : (
             <>Complete by: {todoItem.deadline.substring(0, 10)}</>
           )}
@@ -30,7 +35,7 @@ const TodoItem = ({ todoItem, onCompleteTodo, onEditTodo, onDeleteTodo }) => {
             <FiCheck
               className="text-[25px] mr-2.5 cursor-pointer text-[#00e67a] hover:text-[#04c46a]"
               onClick={() => {
-                onCompleteTodo(todoItem._id);
+                onUpdateOrCompleteTodo(todoItem, !todoItem.completed);
               }}
               title="Complete?"
             />
