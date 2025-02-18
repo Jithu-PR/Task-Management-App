@@ -165,7 +165,7 @@ The application uses React's `useState` and `useEffect` hooks for managing state
 
 ## To Do List Screens
 
-There are two main screens based on the `isScreen` state:
+There are two main screens based on the `isCompleted` state:
 
 1. **Incomplete Todos**: Todos that are not marked as completed.
 2. **Completed Todos**: Todos that are marked as completed.
