@@ -1,35 +1,66 @@
-# Todo List Application
-
-## Overview
-
-This is a simple **Todo List** application built with **React**, **Next.js**, and **MongoDB**. The app allows users to create, edit, delete, and mark tasks as completed. It features an interactive interface with state management, dynamic rendering, and a smooth user experience.
+Great! You can update the README with your live link like this:
 
 ---
 
-## Features
+# Task Management Application
 
-- **Create Todo**: Users can add new todo items by filling in a title, description, and deadline.
-- **Edit Todo**: Users can modify existing todos, including updating the title, description, and deadline.
-- **Complete Todo**: Users can mark todos as completed, which moves them to a separate list.
-- **Delete Todo**: Users can delete todos from the list.
-- **Dynamic Views**: The application displays all todos in different screens:
-  - **Incomplete Todos**: Displayed when `isCompletedTab` is `false`.
-  - **Completed Todos**: Displayed when `isCompletedTab` is `true`.
-- **Toast Notifications**: Toasts are shown on successful actions (add, edit, delete) or if something goes wrong.
+## Overview
+
+This is a **Task Management** web application built as part of the Full-Stack Developer Intern task. The application allows users to create, edit, delete, and manage tasks with ease. The app demonstrates both **frontend** and **backend** development skills, and is built using **Node.js** with **Express** for the backend, and **React** for the frontend.
+
+The main objective is to create a functional task management system that can handle CRUD operations (Create, Read, Update, Delete) for tasks, with proper API implementation and data persistence.
+
+---
+
+## Frontend Screenshots
+
+### Homepage:
+Displays the list of tasks with options to create, edit, and delete tasks.
+
+![Homepage](./public/screenshots/homepage.png)
+
+## Key Features
+
+1. **Task Management**:
+   - Create, edit, delete, and mark tasks as completed.
+   
+2. **Backend API Development**:
+   - Tech Stack: **Node.js** with **Express** for backend API development.
+   - API Endpoints:
+     - **GET /tasks**: Retrieve all tasks.
+     - **POST /tasks**: Create a new task.
+     - **PUT /tasks/:id**: Update an existing task (e.g., mark as completed or modify task details).
+     - **DELETE /tasks/:id**: Remove a task.
+   - Error Handling: Proper error handling with appropriate HTTP status codes and error messages (e.g., validation failures, missing resources).
+
+3. **Data Persistence**:
+   - Storage Mechanism: For simplicity, a **SQLite** database is used to persist task data. You can use another storage option if preferred.
+
+---
+
+## Data Model
+
+The task model consists of the following fields:
+
+- **id**: Unique identifier (string or number).
+- **title**: Brief description of the task.
+- **description**: (Optional) Detailed information about the task.
+- **completed**: Boolean flag indicating task status (true for completed, false for incomplete).
 
 ---
 
 ## Tech Stack
 
 - **Frontend**:
-  - React (with functional components and hooks)
-  - Next.js (for server-side functionality)
-  - TailwindCSS (for styling)
-  - Axios (for API calls)
-  - Shadcn (for UI components like Toaster)
+  - **React** (or **Next.js**) for the user interface.
+  - **CSS/Tailwind CSS** for styling.
+  
 - **Backend**:
-  - Node.js (with Next.js API routes)
-  - MongoDB (for storing todos)
+  - **Node.js** and **Express** for building the API.
+  - **SQLite** (or other database options like MongoDB or JSON-based storage) for data persistence.
+  
+- **API Documentation**: 
+  - The API is developed with RESTful principles for ease of use and testing.
 
 ---
 
@@ -38,161 +69,168 @@ This is a simple **Todo List** application built with **React**, **Next.js**, an
 ### Prerequisites
 
 - **Node.js** installed on your machine.
-- **MongoDB** (or a MongoDB Atlas cluster) for storing todos.
+- **SQLite** (or any preferred database) for storing tasks.
 
 ### Installation
 
 1. **Clone the repository**:
 
-```bash
-git clone https://github.com/yourusername/todo-app.git
-```
-
-2. **Install dependencies**:
-
-```bash
-cd todo-app
-npm install
-```
-
-3. **Set up your MongoDB**:
-
-   - If you're using **MongoDB Atlas**, create a cluster and get your connection string.
-   - Add your MongoDB URI in the `.env` file:
-
-   ```
-   MONGODB_URI=your_mongodb_connection_string
+   ```bash
+   git clone https://github.com/yourusername/task-management-app.git
    ```
 
-4. **Run the application**:
+2. **Install backend dependencies**:
 
-```bash
-npm run dev
-```
+   ```bash
+   cd task-management-app/backend
+   npm install
+   ```
 
-5. Open your browser and go to `http://localhost:3000`.
+3. **Install frontend dependencies**:
+
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+
+4. **Setup SQLite** (or other database):
+   - The app uses SQLite by default. Ensure that the database file is created upon first run, or configure the database connection as needed.
+
+5. **Run the backend**:
+
+   ```bash
+   cd backend
+   npm run dev
+   ```
+
+6. **Run the frontend**:
+
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+7. **Open the application**:
+   - Open the browser and go to `http://localhost:3000` for the frontend, and the backend will be running on `http://localhost:5000`.
 
 ---
 
-## API Routes
+## API Endpoints
 
-### `POST /api/todolist`
+### **GET /tasks**
 
-- **Purpose**: Adds a new todo.
+- **Purpose**: Retrieve all tasks.
+- **Response**:
+  ```json
+  [
+    {
+      "id": 1,
+      "title": "Task Title",
+      "description": "Task Description",
+      "completed": false
+    },
+    ...
+  ]
+  ```
+
+### **POST /tasks**
+
+- **Purpose**: Create a new task.
 - **Body**:
   ```json
   {
-    "title": "Todo title",
-    "description": "Todo description",
-    "deadline": "2025-12-31T12:00:00Z"
+    "title": "New Task",
+    "description": "Task details",
+    "completed": false
   }
   ```
 - **Response**:
   ```json
   {
-    "message": "Todo added successfully",
-    "newTodo": {
-      "_id": "todo_id",
-      "title": "Todo title",
-      "description": "Todo description",
-      "deadline": "2025-12-31T12:00:00Z",
+    "message": "Task created successfully",
+    "task": {
+      "id": 1,
+      "title": "New Task",
+      "description": "Task details",
       "completed": false
     }
   }
   ```
 
-### `PUT /api/todolist`
+### **PUT /tasks/:id**
 
-- **Purpose**: Updates a todo or marks it as completed.
-- **Query Params**:
-  - `id`: The ID of the todo to update.
-- **Body** (for editing or marking as complete):
-
+- **Purpose**: Update an existing task or mark it as completed.
+- **Body**:
   ```json
   {
-    "title": "Updated title",
-    "description": "Updated description",
-    "deadline": "2025-12-31T12:00:00Z",
+    "title": "Updated Title",
+    "description": "Updated Description",
     "completed": true // or false for editing
   }
   ```
-
 - **Response**:
   ```json
   {
-    "message": "Todo marked as completed",
-    "updatedTodo": {
-      "_id": "todo_id",
-      "title": "Updated title",
-      "description": "Updated description",
-      "deadline": "2025-12-31T12:00:00Z",
+    "message": "Task updated successfully",
+    "task": {
+      "id": 1,
+      "title": "Updated Title",
+      "description": "Updated Description",
       "completed": true
     }
   }
   ```
 
-### `DELETE /api/todolist`
+### **DELETE /tasks/:id**
 
-- **Purpose**: Deletes a todo.
-- **Query Params**:
-
-  - `id`: The ID of the todo to delete.
-
+- **Purpose**: Delete a task.
 - **Response**:
   ```json
   {
-    "message": "Todo deleted"
+    "message": "Task deleted successfully"
   }
   ```
 
 ---
 
-## State Management
+## Testing the API
 
-The application uses React's `useState` and `useEffect` hooks for managing state.
+To test the API, you can use tools like **Postman** or **curl**.
 
-- **`useState`**: To manage the state of todos and other UI states such as loading and edit modes.
-- **`useEffect`**: To fetch all todos when the page first loads (`getAllTodo()`).
+### Example:
 
----
+1. **Create a new task**:
+   - Send a **POST** request to `http://localhost:5000/tasks` with the body:
 
-## UI Components
+   ```json
+   {
+     "title": "New Task",
+     "description": "This is a new task",
+     "completed": false
+   }
+   ```
 
-- **TodoList**: The main component that displays the list of todos.
-- **TodoItem**: Represents each todo item and handles the actions such as editing, completing, and deleting.
+2. **Update a task**:
+   - Send a **PUT** request to `http://localhost:5000/tasks/1` with the updated task details.
 
----
-
-## To Do List Screens
-
-There are two main screens based on the `isCompleted` state:
-
-1. **Incomplete Todos**: Todos that are not marked as completed.
-2. **Completed Todos**: Todos that are marked as completed.
-
----
-
-## Toast Notifications
-
-Toast notifications are shown for:
-
-- **Success**: After a todo is added, updated, or deleted.
-- **Error**: If a user attempts to submit incomplete or invalid data.
+3. **Delete a task**:
+   - Send a **DELETE** request to `http://localhost:5000/tasks/1`.
 
 ---
 
-## Customization
+## Frontend Screenshots
 
-1. **Styling**: The application uses **TailwindCSS** for styling. You can adjust the design by modifying the classes in the components.
-2. **MongoDB**: You can change the MongoDB URI in the `.env` file to connect to your own database.
+- **Homepage**: Displays the task list with options to create, update, and delete tasks.
+  - Screenshot 1: (Include a screenshot of the main task page)
+  - Screenshot 2: (Include a screenshot of task detail page or task management view)
 
 ---
 
 ## Future Improvements
 
-- **User Authentication**: Add authentication to allow users to have personalized todo lists.
-- **Sorting**: Allow sorting of todos by deadline or creation date.
-- **Search**: Add a search feature to filter todos by title or description.
+- **User Authentication**: Implement authentication to allow personalized task management.
+- **Task Priorities**: Allow users to set priorities (e.g., High, Medium, Low).
+- **Sorting/Filtering**: Enable sorting by task title or deadline, and filtering tasks by completion status.
 
 ---
 
@@ -202,4 +240,16 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-Feel free to modify this README as per your requirements!
+## Conclusion
+
+This **Task Management** web application demonstrates full-stack development skills with an easy-to-use interface for managing tasks. The backend is built with Node.js and Express, while the frontend uses React. With the given setup instructions, you should be able to run the app locally and test its full functionality.
+
+---
+
+### **Github Repository URL**: [https://github.com/Jithu-PR/Task-Management-App/](https://github.com/Jithu-PR/Task-Management-App/)
+
+### **Live Demo URL**: [https://task-management-app-smoky-two.vercel.app/](https://task-management-app-smoky-two.vercel.app/)
+
+--- 
+
+Now the **live URL** is integrated into the README, so users can easily access your live application.
