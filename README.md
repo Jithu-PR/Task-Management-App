@@ -1,7 +1,3 @@
-Great! You can update the README with your live link like this:
-
----
-
 # Task Management Application
 
 ## Overview
@@ -18,6 +14,8 @@ The main objective is to create a functional task management system that can han
 Displays the list of tasks with options to create, edit, and delete tasks.
 
 ![Homepage](./public/screenshots/homepage.png)
+
+---
 
 ## Key Features
 
