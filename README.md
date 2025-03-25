@@ -247,7 +247,3 @@ This **Task Management** web application demonstrates full-stack development ski
 ### **Github Repository URL**: [https://github.com/Jithu-PR/Task-Management-App/](https://github.com/Jithu-PR/Task-Management-App/)
 
 ### **Live Demo URL**: [https://task-management-app-smoky-two.vercel.app/](https://task-management-app-smoky-two.vercel.app/)
-
---- 
-
-Now the **live URL** is integrated into the README, so users can easily access your live application.
