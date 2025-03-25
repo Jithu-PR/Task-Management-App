@@ -108,6 +108,8 @@ export default function TodoList() {
       });
     } finally {
       setIsLoading(false);
+      setIsEdit(false);
+      setTodo(initialState)
     }
   };
 
@@ -144,8 +146,8 @@ export default function TodoList() {
     >
       <h1 className="text-center text-4xl mt-5">To-Do List</h1>
       <div className="bg-[#1f1e1e] p-[2%] mx-auto mt-[3%] max-h-[80%] overflow-y-auto shadow-[0px_5px_7px_black]">
-        <div className="flex items-center justify-center border-t border-b border-gray-400 py-6 mb-6">
-          <div className="flex flex-col items-start ml-6 mr-6">
+        <div className="grid grid-cols-2 sm:flex sm:flex-row items-start justify-center border-t border-b border-gray-400 py-6 mb-6">
+          <div className="flex flex-col items-start mr-6">
             <label className="font-bold mb-2.5">Title</label>
             <input
               type="text"
